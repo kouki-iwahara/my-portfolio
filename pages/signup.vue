@@ -34,10 +34,10 @@ export default {
           displayName: this.userName,
         })
         .then(() => {
-          return this.$store.commit('setDisplayName', userData.displayName);
+          this.$store.commit('setDisplayName', userData.displayName);
         })
       };
-      // ユーザーの名前、メール、パスワード登録を同期的に実行する関数の宣言
+      // ユーザーの名前、メール、パスワード登録を実行する関数の宣言
       const createAccount = async() => {
         await firebase.auth().
         createUserWithEmailAndPassword(this.userMail, this.password)

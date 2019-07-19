@@ -1,11 +1,12 @@
 <template>
   <div id="signup">
     <h1>SignUp!!</h1>
+    <span>メールとパスワードでログイン登録</span>
     <input type="text" placeholder="表示名" v-model="userName">
     <input type="text" placeholder="example@gmail.com" v-model="userMail">
     <input type="password" placeholder="パスワード" v-model="password">
-
     <button @click="signUp">登録</button>
+
     <nuxt-link to="/">ホーム画面</nuxt-link>
     <nuxt-link to="/signin">サインイン画面</nuxt-link>
   </div>
@@ -13,6 +14,7 @@
 
 <script>
 import firebase from '@/plugins/firebase'
+import { setDisplayName, createAccount } from '~/definition/functions.js'
 
 export default {
   name: 'Signup',
@@ -26,25 +28,8 @@ export default {
   methods: {
     // ユーザーの名前、メール、パスワードを登録
     signUp() {
-      // ユーザー名を登録する関数の宣言
-      const setDisplayName = () => {
-        const userData = firebase.auth().currentUser;
-        // ユーザーのdisplayNameを更新し、stateのuserNameを書き換える
-        return userData.updateProfile({
-          displayName: this.userName,
-        })
-        .then(() => {
-          this.$store.commit('setDisplayName', userData.displayName);
-        })
-      };
-      // ユーザーの名前、メール、パスワード登録を実行する関数の宣言
-      const createAccount = async() => {
-        await firebase.auth().
-        createUserWithEmailAndPassword(this.userMail, this.password)
-        await setDisplayName()
-      };
       // ユーザーデータを登録。成功でsigninのページへ遷移
-      createAccount()
+      createAccount(this.userMail, this.password, this.userName, this.$store)
       .then(() => {
         alert(`こんにちは、${this.$store.state.userName}さん！登録完了です！` );
         this.$router.push({ path: '/signin' })
@@ -52,7 +37,7 @@ export default {
       .catch(error => {
         alert(error.message);
       })
-    }
+    },
   }
 }
 </script>

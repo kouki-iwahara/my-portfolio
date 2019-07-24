@@ -1,7 +1,7 @@
 <template>
   <div class="myPage">
     <Head></Head>
-    <h2>思い出の本投稿アプリ　My Page</h2>
+    <h2>思い出の本投稿アプリ My Page</h2>
     <div class="myPage_main">
       <img class="myPage_main-img" src="../book.jpg" alt="">
       <button>投稿する</button>
@@ -22,8 +22,7 @@ export default {
   components: {
     Head,
     DisplayPosts,
-  }
-  
+  },
 }
 </script>
 

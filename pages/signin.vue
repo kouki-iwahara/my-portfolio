@@ -30,22 +30,20 @@ export default {
         this.$router.push({path: '/mypage'});
       })
       .catch(error => {
-        alert(error.message)
-      })
+        alert(error.message);
+      });
     },
     googleLogin() {
       firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
       .then(() => {
         const user = firebase.auth().currentUser;
-        this.$store.commit('setDisplayName', user.displayName);
         this.$router.push({path: '/mypage'});
       })
       .catch((error) => {
         alert(error)
-      })
+      });
     }
   }
-  
 }
 </script>
 

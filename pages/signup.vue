@@ -14,7 +14,7 @@
 
 <script>
 import firebase from '@/plugins/firebase'
-import { setDisplayName, createAccount } from '~/definition/functions.js'
+import { createAccount } from '~/definition/functions.js'
 
 export default {
   name: 'Signup',
@@ -31,7 +31,8 @@ export default {
       // ユーザーデータを登録。成功でsigninのページへ遷移
       createAccount(this.userMail, this.password, this.userName, this.$store)
       .then(() => {
-        alert(`こんにちは、${this.$store.state.userName}さん！登録完了です！` );
+        const userData = firebase.auth().currentUser;
+        alert(`こんにちは、${userData.displayName}さん！登録完了です！` );
         this.$router.push({ path: '/signin' })
       })
       .catch(error => {

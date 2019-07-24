@@ -12,6 +12,7 @@
 
 <script>
 import firebase from '@/plugins/firebase'
+import { showUserData } from '~/definition/functions.js'
 
 export default {
   name: 'Head',
@@ -29,6 +30,9 @@ export default {
     toSignin() {
       this.$router.push({ path: '/signin' })
     }
+  },
+  created() {
+    showUserData(this.$store, this.$router)
   }
 }
 </script>

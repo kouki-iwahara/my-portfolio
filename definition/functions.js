@@ -18,14 +18,3 @@ export async function createAccount(
         createUserWithEmailAndPassword(userMail, password);
   await setUserData(userName);
 };
-
-// ログイン状況を真偽値で判定し、条件分岐に使おうとしたコード。 真偽値が返らない
-// export function isLogin() {
-//   return firebase.auth().onAuthStateChanged(user => {
-//      if(user) {
-//        return true;
-//      } else {
-//        return false;
-//      }
-//   });
-// }

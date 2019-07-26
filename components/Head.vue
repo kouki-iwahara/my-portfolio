@@ -12,8 +12,6 @@
 
 <script>
 import firebase from '@/plugins/firebase'
-import { isLogin } from '~/definition/functions.js'
-
 
 export default {
   name: 'Head',

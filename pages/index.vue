@@ -2,7 +2,7 @@
   <div class="container">
     <Head/>
     <div class="main">
-      <h1>思い出の本投稿アプリホーム画面</h1>
+      <h1>思い出の映画投稿アプリホーム画面</h1>
       <p>textが入りますtextが入りますtextが入ります</p>
       <img class="main-img" src="../book.jpg" alt="">
       <nav class="main-link">

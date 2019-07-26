@@ -1,73 +1,46 @@
 <template>
   <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        my-portfolio
-      </h1>
-      <h2 class="subtitle">
-        My mathematical Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+    <Head/>
+    <div class="main">
+      <h1>思い出の映画投稿アプリホーム画面</h1>
+      <p>textが入りますtextが入りますtextが入ります</p>
+      <img class="main-img" src="../book.jpg" alt="">
+      <nav class="main-link">
+        <nuxt-link to="/signup">サインアップ画面</nuxt-link> /
+        <nuxt-link to="/signin">サインイン画面</nuxt-link>
+      </nav>
+    </div>
+    <div class="content">
+      <display-posts/>
     </div>
   </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import firebase from '@/plugins/firebase'
+import Head from '~/components/Head.vue'
+import DisplayPosts from '~/components/DisplayPosts.vue'
 
 export default {
   components: {
-    Logo
+    Head,
+    DisplayPosts
   }
 }
 </script>
 
-<style>
+<style scoped>
 .container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   text-align: center;
+  height: 480px;
 }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+.main-img {
+  height: 300px;
+  width: 100%;
 }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.main-link {
+  font-size: 20px;
+  margin-bottom: 30px;
 }
 </style>

@@ -13,21 +13,19 @@ export function setUserData (userName) {
 export async function createAccount(
   userMail,
   password, 
-  userName, 
-  store) {
+  userName) {
   await firebase.auth().
         createUserWithEmailAndPassword(userMail, password);
-  await setUserData(userName, store);
+  await setUserData(userName);
 };
 
-// ユーザー名を画面に表示する
-// TODO: プロフィール画像も表示させる
-export function showUserData (store, router) {
-  firebase.auth().onAuthStateChanged(user => {
-    if(user) {
-      store.commit('setDisplayName', user.displayName);
-    } else {
-      router.push({path: '/'});
-    };
-  });
-};
+// ログイン状況を真偽値で判定し、条件分岐に使おうとしたコード。 真偽値が返らない
+// export function isLogin() {
+//   return firebase.auth().onAuthStateChanged(user => {
+//      if(user) {
+//        return true;
+//      } else {
+//        return false;
+//      }
+//   });
+// }

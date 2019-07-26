@@ -29,7 +29,7 @@ export default {
     // ユーザーの名前、メール、パスワードを登録
     signUp() {
       // ユーザーデータを登録。成功でsigninのページへ遷移
-      createAccount(this.userMail, this.password, this.userName, this.$store)
+      createAccount(this.userMail, this.password, this.userName)
       .then(() => {
         const userData = firebase.auth().currentUser;
         alert(`こんにちは、${userData.displayName}さん！登録完了です！` );

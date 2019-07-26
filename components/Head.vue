@@ -12,7 +12,8 @@
 
 <script>
 import firebase from '@/plugins/firebase'
-import { showUserData } from '~/definition/functions.js'
+import { isLogin } from '~/definition/functions.js'
+
 
 export default {
   name: 'Head',
@@ -32,7 +33,13 @@ export default {
     }
   },
   created() {
-    showUserData(this.$store, this.$router)
+    firebase.auth().onAuthStateChanged(user => {
+      if(user) {
+        this.$store.commit('setDisplayName', user.displayName)
+      }else {
+        this.$router.push({ path: '/' })
+      }
+    });
   }
 }
 </script>

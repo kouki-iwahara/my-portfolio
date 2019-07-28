@@ -40,6 +40,7 @@
       <div class="movie-image">
         <p>画像</p>
         <input id="file" type="file" @change="getFileData">
+        <input type="button" value="画像をアップロード" @click="upLoadImage">
         <img class="preview" :src="movieImage" alt="">
       </div>
       <!-- /movie-image -->
@@ -56,6 +57,8 @@
 </template>
 
 <script>
+import firebase from '@/plugins/firebase'
+
 export default {
   asyncData() {
     return {
@@ -90,7 +93,20 @@ export default {
         this.movieImage = fileData.target.result;
       };
       reader.readAsDataURL(selectedFile);
-    }
+    },
+    upLoadImage() {
+      if(!this.selectedFile) {
+        alert('画像を選択してください');
+        return;
+      }
+      const storageRef = firebase.storage().ref();
+      const imageRef = storageRef.child(`images/${this.selectedFile.name}`);
+      imageRef.put(this.selectedFile)
+      .then((snapshot) => {
+        console.log(snapshot); //確認用
+        alert('アップロードしました');
+      })
+    },
   }
 }
 </script>
@@ -99,10 +115,14 @@ export default {
 fieldset {
   display: inline-block;
 }
+</style>
 
+<style scoped>
 .preview {
   width: 300px;
   height: 200px;
   display: block;
 }
 </style>
+
+

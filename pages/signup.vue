@@ -29,11 +29,11 @@
           <!-- /password -->
           <div class="user-image">
             <p>アイコン画像</p>
-            <input type="file">
+            <input type="file" @change="getFileData">
             <input type="button" value="画像をアップロード">
 
             <div class="user-image_preview">
-              <img class="userImage" alt="" width="200" height="200">
+              <img class="userImage" :src="this.userImage" alt="" width="200" height="200">
             </div>
             <!-- /user-image_preview -->
           </div>
@@ -60,6 +60,8 @@ export default {
       userName: '',
       userMail: '',
       password: '',
+      userImage: require("~/assets/no-image.jpg"),
+      selectedFile: ''
     }
   },
   methods: {
@@ -75,6 +77,31 @@ export default {
       .catch(error => {
         alert(error.message);
       })
+    },
+    getFileData(fileData) {
+      // ユーザのイメージ画像データを取得し、プレビューを作成
+      this.selectedFile = fileData.target.files[0];
+      console.log(this.selectedFile)
+      // ファイルを選んでなければ初期値に戻す
+      if(!this.selectedFile) {
+        this.userImage = require("~/assets/no-image.jpg");
+        return;
+      }
+      // プレビューを作成
+      this.previewImage(this.selectedFile);
+    },
+    // 画像のURLを取得しプレビューを表示する
+    previewImage(selectedFile) {
+      // FileReaderに対応しているか
+      if(!(window.FileReader)) {
+        alert('表示できません');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (fileData) => {
+        this.userImage = fileData.target.result;
+      };
+      reader.readAsDataURL(selectedFile);
     },
   }
 }

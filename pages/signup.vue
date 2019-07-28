@@ -30,10 +30,10 @@
           <div class="user-image">
             <p>アイコン画像</p>
             <input type="file" @change="getFileData">
-            <input type="button" value="画像をアップロード">
+            <input type="button" value="画像をアップロード" @click="upLoadImage">
 
             <div class="user-image_preview">
-              <img class="userImage" :src="this.userImage" alt="" width="200" height="200">
+              <img class="userImage" :src="this.userImage" alt="イメージ写真" width="200" height="200">
             </div>
             <!-- /user-image_preview -->
           </div>
@@ -102,6 +102,35 @@ export default {
         this.userImage = fileData.target.result;
       };
       reader.readAsDataURL(selectedFile);
+    },
+    // プレビュー画像をアップロード
+    upLoadImage() {
+      // ファイルを選択しているか確認
+      if(!this.selectedFile) {
+        alert('画像を選択してください');
+        return;
+      }
+      const storageRef = firebase.storage().ref();
+      const imageRef = storageRef.child(`images/${this.selectedFile.name}`);
+      imageRef.put(this.selectedFile)
+      .then((snapshot) => {
+        console.log(snapshot); //確認用
+        alert('アップロードしました');
+      })
+    },
+    // storageの画像をダウンロードしURLを取得
+    downLoadImage() {
+      const storageRef = firebase.storage().ref();
+      storageRef.child(`images/${this.selectedFile.name}`).getDownloadURL()
+      .then((url) => {
+        this.photoURL = url;
+        console.log(this.photoURL)
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error)
+        return;
+      });
     },
   }
 }

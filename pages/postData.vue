@@ -107,6 +107,17 @@ export default {
         alert('アップロードしました');
       })
     },
+    downLoadImage() {
+      const storageRef = firebase.storage().ref();
+      storageRef.child(`images/${this.selectedFile.name}`).getDownloadURL()
+      .then((url) => {
+        this.movieImage = url;
+      })
+      .catch((error) => {
+        alert('画像をアップロードしてください')
+        return;
+      })
+    }
   }
 }
 </script>

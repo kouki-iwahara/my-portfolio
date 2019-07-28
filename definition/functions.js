@@ -2,10 +2,11 @@ import firebase from '@/plugins/firebase'
 
 // ユーザー名を登録
 // TODO: プロフィール画像も登録する
-export function setUserData (userName) {
+export function setUserData (userName, userImage) {
   const userData = firebase.auth().currentUser;
   return userData.updateProfile({
-    displayName: userName
+    displayName: userName,
+    photoURL: userImage
   });
 };
 
@@ -13,8 +14,9 @@ export function setUserData (userName) {
 export async function createAccount(
   userMail,
   password, 
-  userName) {
+  userName,
+  userImage) {
   await firebase.auth().
         createUserWithEmailAndPassword(userMail, password);
-  await setUserData(userName);
+  await setUserData(userName, userImage);
 };

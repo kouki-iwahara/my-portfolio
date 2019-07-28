@@ -61,16 +61,32 @@ export default {
       userMail: '',
       password: '',
       userImage: require("~/assets/no-image.jpg"),
-      selectedFile: ''
+      selectedFile: '',
+      upLoad: false
     }
   },
   methods: {
     // ユーザーの名前、メール、パスワードを登録
     signUp() {
+      // 選択したファイルをアップデートしたか確認
+      if(this.selectedFile) {
+        if(this.upLoad) {
+          this.downLoadImage();
+        } else {
+          alert('画像をアップデートしてください');
+          return;
+        }
+      };
       // ユーザーデータを登録。成功でsigninのページへ遷移
-      createAccount(this.userMail, this.password, this.userName)
+      createAccount(
+        this.userMail,
+        this.password,
+        this.userName,
+        this.userImage)
       .then(() => {
+        //WARNING: 選んだファイルによっては'Photo URL too long.'のエラーが出ることがある。その時はemailだけが登録されている。よって、画像を変えて登録し直そうとしても、'The email address is already in use by another account.'のエラーが出てしまう。原因はまだ不明。
         const userData = firebase.auth().currentUser;
+        console.log(userData)
         alert(`こんにちは、${userData.displayName}さん！登録完了です！` );
         this.$router.push({ path: '/signin' })
       })
@@ -78,8 +94,9 @@ export default {
         alert(error.message);
       })
     },
+    // ユーザのイメージ画像データを取得し、プレビューを作成
     getFileData(fileData) {
-      // ユーザのイメージ画像データを取得し、プレビューを作成
+      this.upLoad = false;
       this.selectedFile = fileData.target.files[0];
       console.log(this.selectedFile)
       // ファイルを選んでなければ初期値に戻す
@@ -115,6 +132,7 @@ export default {
       imageRef.put(this.selectedFile)
       .then((snapshot) => {
         console.log(snapshot); //確認用
+        this.upLoad = true;
         alert('アップロードしました');
       })
     },
@@ -123,8 +141,8 @@ export default {
       const storageRef = firebase.storage().ref();
       storageRef.child(`images/${this.selectedFile.name}`).getDownloadURL()
       .then((url) => {
-        this.photoURL = url;
-        console.log(this.photoURL)
+        this.userImage = url;
+        console.log(this.userImage)
       })
       .catch((error) => {
         console.log(error);
@@ -149,4 +167,3 @@ input {
   padding: 10px;
 }
 </style>
-

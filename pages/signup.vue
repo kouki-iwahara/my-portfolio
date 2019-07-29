@@ -16,21 +16,21 @@
           <div class="user-mail">
             <label for="user-mail">
               <p>Eメール</p>
-              <input type="email" id="user-mail" placeholder="example@gmail.com" v-model="userMail" required>
+              <input type="email" id="user-mail" v-model="userMail" required>
             </label>
           </div>
           <!-- /user-name -->
           <div class="password">
             <label for="password">
               <p>パスワード</p>
-              <input type="password" id="password" placeholder="パスワード" v-model="password" required>
+              <input type="password" id="password" placeholder="半角英数字6文字以上" v-model="password" required>
             </label>
           </div>
           <!-- /password -->
           <div class="user-image">
             <p>アイコン画像</p>
             <input type="file" @change="getFileData">
-            <input type="button" value="画像をアップロード" @click="upLoadImage">
+            <!-- <input type="button" value="アイコン画像に設定" @click="setIcon"> -->
 
             <div class="user-image_preview">
               <img class="userImage" :src="this.userImage" alt="イメージ写真" width="200" height="200">
@@ -62,19 +62,18 @@ export default {
       password: '',
       userImage: require("~/assets/no-image.jpg"),
       selectedFile: '',
-      upLoad: false
     }
   },
   methods: {
     // ユーザーの名前、メール、パスワードを登録
-    signUp() {
-      // 選択したファイルをアップデートしたか確認
+    async signUp() {
+      // ファイルを選択しているならアップロードし、ダウンロードURLを取得
       if(this.selectedFile) {
-        if(this.upLoad) {
-          this.downLoadImage();
-        } else {
-          alert('画像をアップデートしてください');
-          return;
+        try {
+          await this.$store.dispatch('upLoadImage',this.selectedFile);
+          this.userImage = await this.$store.dispatch('downLoadImage',this.selectedFile);
+        } catch (error) {
+          alert(error)
         }
       };
       // ユーザーデータを登録。成功でsigninのページへ遷移
@@ -84,7 +83,6 @@ export default {
         this.userName,
         this.userImage)
       .then(() => {
-        //WARNING: 選んだファイルによっては'Photo URL too long.'のエラーが出ることがある。その時はemailだけが登録されている。よって、画像を変えて登録し直そうとしても、'The email address is already in use by another account.'のエラーが出てしまう。原因はまだ不明。
         const userData = firebase.auth().currentUser;
         console.log(userData)
         alert(`こんにちは、${userData.displayName}さん！登録完了です！` );
@@ -92,13 +90,13 @@ export default {
       })
       .catch(error => {
         alert(error.message);
-      })
+      });
     },
     // ユーザのイメージ画像データを取得し、プレビューを作成
     getFileData(fileData) {
       this.upLoad = false;
       this.selectedFile = fileData.target.files[0];
-      console.log(this.selectedFile)
+      // console.log(this.selectedFile)
       // ファイルを選んでなければ初期値に戻す
       if(!this.selectedFile) {
         this.userImage = require("~/assets/no-image.jpg");
@@ -119,37 +117,7 @@ export default {
         this.userImage = fileData.target.result;
       };
       reader.readAsDataURL(selectedFile);
-    },
-    // プレビュー画像をアップロード
-    upLoadImage() {
-      // ファイルを選択しているか確認
-      if(!this.selectedFile) {
-        alert('画像を選択してください');
-        return;
-      }
-      const storageRef = firebase.storage().ref();
-      const imageRef = storageRef.child(`images/${this.selectedFile.name}`);
-      imageRef.put(this.selectedFile)
-      .then((snapshot) => {
-        console.log(snapshot); //確認用
-        this.upLoad = true;
-        alert('アップロードしました');
-      })
-    },
-    // storageの画像をダウンロードしURLを取得
-    downLoadImage() {
-      const storageRef = firebase.storage().ref();
-      storageRef.child(`images/${this.selectedFile.name}`).getDownloadURL()
-      .then((url) => {
-        this.userImage = url;
-        console.log(this.userImage)
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error)
-        return;
-      });
-    },
+    }
   }
 }
 </script>

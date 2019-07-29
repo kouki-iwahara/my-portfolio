@@ -1,6 +1,7 @@
 <template>
   <div id="header">
     <div class="header-userName">
+      <img :src="this.$store.state.userImage" alt="" width="35" height="35">
       <span>{{ `こんにちは！${this.$store.state.userName}さん！` }}</span>
     </div>
     <div class="header-menu">
@@ -19,12 +20,15 @@ export default {
     logout() {
       firebase.auth().signOut()
       .then(() => {
-        this.$store.commit('setDisplayName', 'guest');
+        this.$store.commit('showUser',{
+          userName: 'guest',
+          photoURL: ''
+        });
         this.$router.push({ path: '/' })
       })
       .catch(error => {
         alert(error);
-      })
+      });
     },
     toSignin() {
       this.$router.push({ path: '/signin' })
@@ -33,10 +37,13 @@ export default {
   created() {
     firebase.auth().onAuthStateChanged(user => {
       if(user) {
-        this.$store.commit('setDisplayName', user.displayName)
+        this.$store.commit('showUser',{
+          userName: user.displayName,
+          photoURL: user.photoURL
+          });
       }else {
-        this.$router.push({ path: '/' })
-      }
+        this.$router.push({ path: '/' });
+      };
     });
   }
 }

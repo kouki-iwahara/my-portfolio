@@ -2,7 +2,7 @@
   <div class="post-data">
     <fieldset >
       <legend>思い出の映画投稿</legend>
-      <form action="" @submit.prevent="storageData">
+      <form action="" @submit.prevent="postData">
         <div class="movie-title">
           <label for="title">
             <p>題名<span>(必須)</span></p>
@@ -40,7 +40,6 @@
         <div class="movie-image">
           <p>画像</p>
           <input id="file" type="file" @change="getFileData">
-          <input type="button" value="画像をアップロード" @click="upLoadImage">
           <img class="preview" :src="movieImage" alt="">
         </div>
         <!-- /movie-image -->
@@ -59,8 +58,6 @@
 </template>
 
 <script>
-import firebase from '@/plugins/firebase'
-
 export default {
   asyncData() {
     return {
@@ -69,7 +66,6 @@ export default {
       selectedFile: '',
       memoryText: '',
       movieImage: require("~/assets/movie.jpg"),
-      upLoad: false,
     }
   },
   methods: {
@@ -98,79 +94,32 @@ export default {
       };
       reader.readAsDataURL(selectedFile);
     },
-    // 選択された画像のアップロード
-    upLoadImage() {
-      // 画像を選択しているか確認
-      if(!this.selectedFile) {
-        alert('画像を選択してください');
+    // 入力されたデータをサーバに保存
+    async postData() {
+      // ログインしていなければHOME画面へ遷移
+      if(!this.$store.dispatch('isLogin')) {
+        this.$router.push({path: '/'});
+        return;
+      } 
+      // 必須項目が入力されているか確認
+      if(!this.movieTitle || !this.category || !this.memoryText) {
         return;
       }
-      const storageRef = firebase.storage().ref();
-      const imageRef = storageRef.child(`images/${this.selectedFile.name}`);
-      imageRef.put(this.selectedFile)
-      .then((snapshot) => {
-        console.log(snapshot); //確認用
-        this.upLoad = true;
-        alert('アップロードしました');
-      })
-      .catch((error) => {
-        alert(error)
-      })
-    },
-    // storageの画像からdownloadURL取得。関数storageData内で使用
-    downLoadImage() {
-      const storageRef = firebase.storage().ref();
-      storageRef.child(`images/${this.selectedFile.name}`).getDownloadURL()
-      .then((url) => {
-        this.movieImage = url;
-      })
-      .catch((error) => {
-        alert(error)
-      })
-    },
-    // 入力されたデータをサーバに保存
-    storageData() {
-      // ユーザがログイン中ならデータをサーバに保存。ログインしていなければHOME画面へ遷移
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          // 必須項目が入力されているか確認
-          if(!this.movieTitle || !this.category || !this.memoryText) {
-            return;
-          }
-          // 画像を選択しているならstorageの画像URLを取得
-          if(this.selectedFile) {
-            // uploadしているならdownloadURL取得
-            if(this.upLoad) {
-              this.downLoadImage();
-            } else {
-              alert('画像をアップロードしてください');
-              return;
-            }
-          };
-          // サーバへ入力されたデータを保存。
-          const db = firebase.firestore();
-          db.collection('movies').add({
-            userId: user.uid, //自分の投稿履歴の検索用
-            userImage: user.photoURL,
-            userName: this.$store.state.userName,
-            title: this.movieTitle,
-            category: this.category,
-            image: this.movieImage,
-            text: this.memoryText,
-            created: firebase.firestore.FieldValue.serverTimestamp() //日付順にソートする為
-          })
-          .then((doc) => {
-            console.log(doc) //確認用
-            this.$router.push({path: '/myPage'});
-          })
-          .catch((error) => {
-            alert(error)
-          });
-        } else {
-          this.$router.push({path: '/'});
-          return;
-        }
-      })
+      // 画像を選択しているならアップロードし、ダウンロードURLを取得
+      if(this.selectedFile) {
+        await this.$store.dispatch('upLoadImage', this.selectedFile);
+        this.movieImage = await this.$store.dispatch('downLoadImage', this.selectedFile);
+      };
+      // サーバへ入力されたデータを保存。
+      await this.$store.dispatch('storageData',
+        {movieTitle: this.movieTitle,
+        category: this.category,
+        movieImage: this.movieImage,
+        memoryText: this.memoryText});
+
+      alert('投稿しました！');
+      // 全て成功したらmyPageへ遷移。エラーが出るなら遷移させないようにしたい。
+      this.$router.push({ path: '/myPage' });
     },
     transitionMyPage() {
       this.$router.push({path: '/myPage'});

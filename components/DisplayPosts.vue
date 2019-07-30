@@ -1,5 +1,7 @@
 <template>
   <div class="content">
+    <button @click="transitionPostData">投稿する</button>
+    <button>条件で検索する</button>
     <h2>みんなの投稿</h2>
       <div class="post">
         <div class="post-img">
@@ -44,7 +46,11 @@
 
 <script>
 export default {
-  
+  methods: {
+    transitionPostData() {
+      this.$router.push({path: '/postData'});
+    }
+  }
 }
 </script>
 

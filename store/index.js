@@ -6,7 +6,7 @@ export const state = () => ({
 });
 
 export const mutations = {
-  showUser(state, {userName, photoURL}) {
+  setUserWithNameAndImage(state, {userName, photoURL}) {
     state.userName = userName,
     state.userImage = photoURL
   }
@@ -33,7 +33,16 @@ export const actions = {
     .catch((error) => {
       alert(error);
     });
-  }
+  },
+  // ユーザの名前と画像を表示
+  showUser({commit}) {
+    firebase.auth().onAuthStateChanged(user => {
+      commit('setUserWithNameAndImage',{
+        userName: user.displayName,
+        photoURL: user.photoURL
+      });
+    });
+  },
 }
 
 

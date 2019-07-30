@@ -35,16 +35,11 @@ export default {
     }
   },
   created() {
-    firebase.auth().onAuthStateChanged(user => {
-      if(user) {
-        this.$store.commit('showUser',{
-          userName: user.displayName,
-          photoURL: user.photoURL
-          });
-      }else {
-        this.$router.push({ path: '/' });
-      };
-    });
+    if(this.$store.dispatch('showUser')) {
+      // 権限あり
+    }else {
+      this.$router.push({ path: '/' });
+    };
   }
 }
 </script>

@@ -69,12 +69,8 @@ export default {
     async signUp() {
       // ファイルを選択しているならアップロードし、ダウンロードURLを取得
       if(this.selectedFile) {
-        try {
           await this.$store.dispatch('upLoadImage',this.selectedFile);
           this.userImage = await this.$store.dispatch('downLoadImage',this.selectedFile);
-        } catch (error) {
-          alert(error)
-        }
       };
       // ユーザーデータを登録。成功でsigninのページへ遷移
       createAccount(

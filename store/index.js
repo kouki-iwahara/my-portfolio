@@ -14,7 +14,7 @@ export const mutations = {
 
 export const actions = {
   // ユーザのアイコン画像をアップロード
-  upLoadImage(ctx, file) {
+  upLoadUserImage(ctx, file) {
     return firebase.storage().ref().child(`images/${file.name}`).put(file)
     .then((snapshot) => {
       console.log(snapshot);
@@ -24,7 +24,7 @@ export const actions = {
     });
   },
   // ユーザのアイコン画像のダウンロードURLを取得
-  downLoadImage(ctx, file) {
+  downLoadUserImage(ctx, file) {
     return firebase.storage().ref().child(`images/${file.name}`).getDownloadURL()
     .then((url) => {
       console.log(url);

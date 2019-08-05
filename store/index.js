@@ -35,12 +35,11 @@ export const actions = {
     });
   },
   // ユーザの名前と画像を表示
-  showUser({commit}) {
-    firebase.auth().onAuthStateChanged(user => {
-      commit('setUserWithNameAndImage',{
-        userName: user.displayName,
-        photoURL: user.photoURL
-      });
+  async showUser({commit}) {
+    await firebase.auth().onAuthStateChanged(user => {
+      if(user) {
+        return user;
+      }
     });
   },
 }

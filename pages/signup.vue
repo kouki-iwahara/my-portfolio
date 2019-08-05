@@ -71,18 +71,17 @@ export default {
           this.userImage = await this.$store.dispatch('downLoadUserImage',this.selectedFile);
       };
       // ユーザーデータを登録。成功でsigninのページへ遷移
-      await this.$store.dispatch('createAccount',
+      try {
+        await this.$store.dispatch('createAccount',
         {userMail: this.userMail,
         password: this.password,
         userName: this.userName,
         userImage: this.userImage})
-      .then(() => {
-        this.$store.dispatch('showUserNameOnAlert');
+        await this.$store.dispatch('showUserNameOnAlert');
         this.$router.push({ path: '/signin' });
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+      } catch (error) {
+        alert(error);
+      }
     },
     // ユーザのイメージ画像データを取得し、プレビューを作成
     getFileData(fileData) {

@@ -42,6 +42,28 @@ export const actions = {
       }
     });
   },
+  async setUserData(ctx, {userName, userImage}) {
+    const userData = firebase.auth().currentUser;
+    await userData.updateProfile({
+      displayName: userName,
+      photoURL: userImage
+    });
+  },
+  async createAccount(
+    {dispatch},
+    {userMail,
+    password, 
+    userName,
+    userImage}) {
+    await firebase.auth().
+          createUserWithEmailAndPassword(userMail, password);
+    await dispatch('setUserData', {userName, userImage});
+  },
+  showUserNameOnAlert(ctx) {
+    const userData = firebase.auth().currentUser;
+    console.log(userData);
+    alert(`こんにちは、${userData.displayName}さん！登録完了です！` );
+  }
 }
 
 

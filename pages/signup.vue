@@ -71,18 +71,16 @@ export default {
           this.userImage = await this.$store.dispatch('downLoadUserImage',this.selectedFile);
       };
       // ユーザーデータを登録。成功でsigninのページへ遷移
-      createAccount(
-        this.userMail,
-        this.password,
-        this.userName,
-        this.userImage)
+      await this.$store.dispatch('createAccount',
+        {userMail: this.userMail,
+        password: this.password,
+        userName: this.userName,
+        userImage: this.userImage})
       .then(() => {
-        const userData = firebase.auth().currentUser;
-        console.log(userData)
-        alert(`こんにちは、${userData.displayName}さん！登録完了です！` );
-        this.$router.push({ path: '/signin' })
+        this.$store.dispatch('showUserNameOnAlert');
+        this.$router.push({ path: '/signin' });
       })
-      .catch(error => {
+      .catch((error) => {
         alert(error.message);
       });
     },

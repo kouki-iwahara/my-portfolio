@@ -30,10 +30,8 @@
           <div class="user-image">
             <p>アイコン画像</p>
             <input type="file" @change="getFileData">
-            <!-- <input type="button" value="アイコン画像に設定" @click="setIcon"> -->
-
             <div class="user-image_preview">
-              <img class="userImage" :src="this.userImage" alt="イメージ写真" width="200" height="200">
+              <img :src="this.userImage" alt="イメージ写真" width="200" height="200">
             </div>
             <!-- /user-image_preview -->
           </div>
@@ -104,12 +102,12 @@ export default {
     // 画像のURLを取得しプレビューを表示する
     previewImage(selectedFile) {
       // FileReaderに対応しているか
-      if(!(window.FileReader)) {
+      if(!window.FileReader) {
         alert('表示できません');
         return;
       }
       const reader = new FileReader();
-      reader.onload = (fileData) => {
+      reader.onload = fileData => {
         this.userImage = fileData.target.result;
       };
       reader.readAsDataURL(selectedFile);

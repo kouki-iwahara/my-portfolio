@@ -69,14 +69,14 @@ export default {
       if(this.selectedFile) {
         // ファイルをアップロード
         try {
-          await this.$store.dispatch('upLoadUserImage',this.selectedFile);
+          await this.$store.dispatch('user/upLoadUserImage',this.selectedFile);
           console.log('アップロード完了')
         } catch (error) {
           alert(error);
         };
         // ダウンロードURLを取得
         try {
-          this.userImage = await this.$store.dispatch('downLoadUserImage',this.selectedFile);
+          this.userImage = await this.$store.dispatch('user/downLoadUserImage',this.selectedFile);
           console.log(this.userImage);
         } catch (error) {
           alert(error);
@@ -84,16 +84,17 @@ export default {
       };
       // ユーザーデータを登録。成功でsigninのページへ遷移
       try {
-        await this.$store.dispatch('createAccount',
+        await this.$store.dispatch('user/createAccount',
         {userMail: this.userMail,
         password: this.password,
         userName: this.userName,
         userImage: this.userImage})
-        await this.$store.dispatch('showUserNameOnAlert');
-        this.$router.push({ path: '/signin' });
       } catch (error) {
         alert(error);
       }
+      // アラートに名前を表示
+      this.$store.dispatch('user/showUserNameOnAlert');
+      this.$router.push({ path: '/signin' });
     },
     // ユーザのイメージ画像データを取得し、プレビューを作成
     getFileData(fileData) {

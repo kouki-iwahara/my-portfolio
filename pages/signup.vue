@@ -67,8 +67,20 @@ export default {
     async signUp() {
       // ファイルを選択しているならアップロードし、ダウンロードURLを取得
       if(this.selectedFile) {
+        // ファイルをアップロード
+        try {
           await this.$store.dispatch('upLoadUserImage',this.selectedFile);
+          console.log('アップロード完了')
+        } catch (error) {
+          alert(error);
+        };
+        // ダウンロードURLを取得
+        try {
           this.userImage = await this.$store.dispatch('downLoadUserImage',this.selectedFile);
+          console.log(this.userImage);
+        } catch (error) {
+          alert(error);
+        };
       };
       // ユーザーデータを登録。成功でsigninのページへ遷移
       try {
@@ -85,7 +97,6 @@ export default {
     },
     // ユーザのイメージ画像データを取得し、プレビューを作成
     getFileData(fileData) {
-      this.upLoad = false;
       this.selectedFile = fileData.target.files[0];
       // console.log(this.selectedFile)
       // ファイルを選んでなければ初期値に戻す

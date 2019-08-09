@@ -16,23 +16,10 @@ export const actions = {
   // ユーザのアイコン画像をアップロード
   async upLoadUserImage(ctx, file) {
     await firebase.storage().ref().child(`images/${file.name}`).put(file)
-    .then((snapshot) => {
-      console.log(snapshot);
-    })
-    .catch((error) => {
-      alert(error)
-    });
   },
   // ユーザのアイコン画像のダウンロードURLを取得
   async downLoadUserImage(ctx, file) {
-    return await firebase.storage().ref().child(`images/${file.name}`).getDownloadURL()
-    .then((url) => {
-      console.log(url);
-      return url;
-    })
-    .catch((error) => {
-      alert(error);
-    });
+    return await firebase.storage().ref().child(`images/${file.name}`).getDownloadURL();
   },
   async setUserData(ctx, {userName, userImage}) {
     const userData = firebase.auth().currentUser;

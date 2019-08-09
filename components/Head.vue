@@ -35,13 +35,9 @@ export default {
     }
   },
   async created() {
-    const userData = await this.$store.dispatch('showUser'); // テスト用
-    await console.log(userData); // undefined 上記の処理が終わっていない？
-    
-    // この実行結果と同じ処理をaction経由で記述したい
+    // loginしていればユーザデータ表示。loginしていなければホームへページ遷移
     await firebase.auth().onAuthStateChanged(user => {
       if(user) {
-        console.log(1); // async/awaitのテスト用
         this.$store.commit('setUserWithNameAndImage',{
           userName: user.displayName,
           photoURL: user.photoURL
@@ -50,7 +46,6 @@ export default {
         this.$router.push({ path: '/' });
       }
     });
-    await console.log(2); // リロードすると'2','1'の順で表示されてしまう
   }
 }
 </script>

@@ -34,14 +34,6 @@ export const actions = {
       alert(error);
     });
   },
-  // ユーザの名前と画像を表示
-  async showUser({commit}) {
-    await firebase.auth().onAuthStateChanged(user => {
-      if(user) {
-        return user;
-      }
-    });
-  },
   async setUserData(ctx, {userName, userImage}) {
     const userData = firebase.auth().currentUser;
     await userData.updateProfile({

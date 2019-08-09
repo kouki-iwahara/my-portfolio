@@ -111,14 +111,14 @@ export default {
       if(this.selectedFile) {
         // 画像のアップロード
         try {
-          await this.$store.dispatch('upLoadMovieImage', this.selectedFile);
+          await this.$store.dispatch('post/upLoadMovieImage', this.selectedFile);
           console.log('アップロード完了')
         } catch (error) {
           alert(error);
         }
         // 画像のダウンロードURL取得
         try {
-          this.movieImage = await this.$store.dispatch('downLoadMovieImage', this.selectedFile);
+          this.movieImage = await this.$store.dispatch('post/downLoadMovieImage', this.selectedFile);
           console.log(this.movieImage)
         } catch (error) {
           alert(error);
@@ -126,7 +126,7 @@ export default {
       };
       // サーバへ入力されたデータを保存。
       try {
-        await this.$store.dispatch('storageData',
+        await this.$store.dispatch('post/storageData',
         {movieTitle: this.movieTitle,
         category: this.category,
         movieImage: this.movieImage,

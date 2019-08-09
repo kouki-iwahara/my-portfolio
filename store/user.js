@@ -1,5 +1,17 @@
 import firebase from '@/plugins/firebase'
 
+export const state = () => ({
+  userName: 'guest',
+  userImage: '',
+});
+
+export const mutations = {
+  setUserWithNameAndImage(state, {userName, photoURL}) {
+    state.userName = userName,
+    state.userImage = photoURL
+  }
+};
+
 export const actions = {
   // ユーザのアイコン画像をアップロード
   async upLoadUserImage(ctx, file) {

@@ -111,14 +111,14 @@ export default {
       if(this.selectedFile) {
         // 画像のアップロード
         try {
-          await this.$store.dispatch('upLoadImage', this.selectedFile);
+          await this.$store.dispatch('upLoadMovieImage', this.selectedFile);
           console.log('アップロード完了')
         } catch (error) {
           alert(error);
         }
         // 画像のダウンロードURL取得
         try {
-          this.movieImage = await this.$store.dispatch('downLoadImage', this.selectedFile);
+          this.movieImage = await this.$store.dispatch('downLoadMovieImage', this.selectedFile);
           console.log(this.movieImage)
         } catch (error) {
           alert(error);

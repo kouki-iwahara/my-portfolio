@@ -74,10 +74,10 @@ export const actions = {
       created: firebase.firestore.FieldValue.serverTimestamp() //日付順にソートする為
     });
   },
-  async upLoadImage(ctx, file) {
+  async upLoadMovieImage(ctx, file) {
     await firebase.storage().ref().child(`images/${file.name}`).put(file);
   },
-  async downLoadImage(ctx, file) {
+  async downLoadMovieImage(ctx, file) {
     return await firebase.storage().ref().child(`images/${file.name}`).getDownloadURL();
   },
 }

@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import firebase from '@/plugins/firebase'
+
 export default {
   asyncData() {
     return {
@@ -72,7 +74,6 @@ export default {
     // 映画のイメージ画像データを取得し、プレビューを作成
     getFileData(fileData) {
       this.selectedFile = fileData.target.files[0];
-      this.upLoad = false;
       // ファイルを選んでなければ初期値に戻す
       if(!this.selectedFile) {
         this.movieImage = require("~/assets/movie.jpg");
@@ -84,12 +85,12 @@ export default {
     // 画像のURLを取得しプレビューを表示する
     previewImage(selectedFile) {
       // FileReaderに対応しているか
-      if(!(window.FileReader)) {
+      if(!window.FileReader) {
         alert('表示できません');
         return;
       }
       const reader = new FileReader();
-      reader.onload = (fileData) => {
+      reader.onload = fileData => {
         this.movieImage = fileData.target.result;
       };
       reader.readAsDataURL(selectedFile);
@@ -97,26 +98,42 @@ export default {
     // 入力されたデータをサーバに保存
     async postData() {
       // ログインしていなければHOME画面へ遷移
-      if(!this.$store.dispatch('isLogin')) {
-        this.$router.push({path: '/'});
-        return;
-      } 
+      await firebase.auth().onAuthStateChanged(user => {
+        if(!user) {
+          this.$router.push({ path: '/' });
+        }
+      });
       // 必須項目が入力されているか確認
       if(!this.movieTitle || !this.category || !this.memoryText) {
         return;
       }
       // 画像を選択しているならアップロードし、ダウンロードURLを取得
       if(this.selectedFile) {
-        await this.$store.dispatch('upLoadImage', this.selectedFile);
-        this.movieImage = await this.$store.dispatch('downLoadImage', this.selectedFile);
+        // 画像のアップロード
+        try {
+          await this.$store.dispatch('upLoadImage', this.selectedFile);
+          console.log('アップロード完了')
+        } catch (error) {
+          alert(error);
+        }
+        // 画像のダウンロードURL取得
+        try {
+          this.movieImage = await this.$store.dispatch('downLoadImage', this.selectedFile);
+          console.log(this.movieImage)
+        } catch (error) {
+          alert(error);
+        }
       };
       // サーバへ入力されたデータを保存。
-      await this.$store.dispatch('storageData',
+      try {
+        await this.$store.dispatch('storageData',
         {movieTitle: this.movieTitle,
         category: this.category,
         movieImage: this.movieImage,
         memoryText: this.memoryText});
-
+      } catch (error) {
+        alert(error);
+      }
       alert('投稿しました！');
       // 全て成功したらmyPageへ遷移。エラーが出るなら遷移させないようにしたい。
       this.$router.push({ path: '/myPage' });

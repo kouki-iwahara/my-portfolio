@@ -46,4 +46,11 @@ export const actions = {
     console.log(userData);
     alert(`こんにちは、${userData.displayName}さん！登録完了です！` );
   },
+  async signIn({ctx}, {userMail, password}) {
+    await firebase.auth()
+    .signInWithEmailAndPassword(userMail, password);
+  },
+  async googleLogin() {
+    await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  }
 }

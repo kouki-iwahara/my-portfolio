@@ -23,8 +23,7 @@ export const actions = {
   },
   // ユーザデータを設定
   async setUserData(ctx, {userName, userImage}) {
-    const userData = firebase.auth().currentUser;
-    await userData.updateProfile({
+    await firebase.auth().currentUser.updateProfile({
       displayName: userName,
       photoURL: userImage
     });

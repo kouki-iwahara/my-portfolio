@@ -23,17 +23,19 @@ export default {
     }
   },
   methods: {
+    // メールとパスワードでサインイン。成功でマイページへ遷移。
     async signIn() {
       try {
         await this.$store.dispatch('user/signIn',{
           userMail: this.userMail,
           password: this.password
-        })
+        });
       } catch (error) {
         alert(error);
-      }
+      };
       this.$router.push({path: '/mypage'});
     },
+    // googleアカウントでログイン。成功でマイページへ遷移。
     async googleLogin() {
       await this.$store.dispatch('user/googleLogin');
       this.$router.push({path: '/mypage'});

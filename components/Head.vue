@@ -5,7 +5,7 @@
       <span>{{ `こんにちは！${this.$store.state.user.userName}さん！` }}</span>
     </div>
     <div class="header-menu">
-      <button @click="toSignin">ログイン</button>
+      <button @click="transitionSignin">ログイン</button>
       <button @click="logout">ログアウト</button>
     </div>
   </div>
@@ -30,7 +30,7 @@ export default {
         alert(error);
       });
     },
-    toSignin() {
+    transitionSignin() {
       this.$router.push({ path: '/signin' })
     }
   },

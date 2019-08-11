@@ -23,25 +23,22 @@ export default {
     }
   },
   methods: {
-    signIn() {
-      firebase.auth()
-      .signInWithEmailAndPassword(this.userMail, this.password)
-      .then(() => {
-        this.$router.push({path: '/mypage'});
-      })
-      .catch(error => {
-        alert(error.message);
-      });
+    // メールとパスワードでサインイン。成功でマイページへ遷移。
+    async signIn() {
+      try {
+        await this.$store.dispatch('user/signIn',{
+          userMail: this.userMail,
+          password: this.password
+        });
+      } catch (error) {
+        alert(error);
+      };
+      this.$router.push({path: '/mypage'});
     },
-    googleLogin() {
-      firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-      .then(() => {
-        const user = firebase.auth().currentUser;
-        this.$router.push({path: '/mypage'});
-      })
-      .catch((error) => {
-        alert(error)
-      });
+    // googleアカウントでログイン。成功でマイページへ遷移。
+    async googleLogin() {
+      await this.$store.dispatch('user/googleLogin');
+      this.$router.push({path: '/mypage'});
     }
   }
 }

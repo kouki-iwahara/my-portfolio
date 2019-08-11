@@ -1,11 +1,11 @@
 <template>
   <div id="header">
     <div class="header-userName">
-      <img :src="this.$store.state.userImage" alt="" width="35" height="35">
-      <span>{{ `こんにちは！${this.$store.state.userName}さん！` }}</span>
+      <img :src="this.$store.state.user.userImage" alt="" width="35" height="35">
+      <span>{{ `こんにちは！${this.$store.state.user.userName}さん！` }}</span>
     </div>
     <div class="header-menu">
-      <button @click="toSignin">ログイン</button>
+      <button @click="transitionSignin">ログイン</button>
       <button @click="logout">ログアウト</button>
     </div>
   </div>
@@ -20,7 +20,7 @@ export default {
     logout() {
       firebase.auth().signOut()
       .then(() => {
-        this.$store.commit('setUserWithNameAndImage',{
+        this.$store.commit('user/setUserWithNameAndImage',{
           userName: 'guest',
           photoURL: ''
         });
@@ -30,7 +30,7 @@ export default {
         alert(error);
       });
     },
-    toSignin() {
+    transitionSignin() {
       this.$router.push({ path: '/signin' })
     }
   },
@@ -38,7 +38,7 @@ export default {
     // loginしていればユーザデータ表示。loginしていなければホームへページ遷移
     await firebase.auth().onAuthStateChanged(user => {
       if(user) {
-        this.$store.commit('setUserWithNameAndImage',{
+        this.$store.commit('user/setUserWithNameAndImage',{
           userName: user.displayName,
           photoURL: user.photoURL
         });

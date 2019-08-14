@@ -5,6 +5,7 @@
     <h2>みんなの投稿</h2>
     <fieldset>
       <legend>検索する</legend>
+      <input type="button" value="全て表示" @click="showAllPostData">
       <div class="search-title">
         <label for="title">
           <p>題名で検索</p>
@@ -148,26 +149,19 @@ export default {
       } catch (error) {
         alert(error);
       }
+    },
+    async showAllPostData() {
+      try {
+        await this.$store.dispatch('post/getAllPostData', {posts: this.posts});
+      } catch (error) {
+        alert(error);
+      };
     }
   },
   async created() {
     // サーバーからデータを取得して投稿順に表示する
     try {
-      const postData = await this.$store.dispatch('post/getPostData');
-      console.log(postData);
-      postData.forEach(doc => {
-        console.log(doc);
-        const data = doc.data();
-        this.posts.unshift({
-          moiveId: doc.id,
-          userName: data.userName,
-          userImage: data.userImage,
-          title: data.title,
-          category: data.category,
-          image: data.image,
-          text: data.text,
-        })
-      });
+      this.$store.dispatch('post/getAllPostData', {posts: this.posts});
     } catch (error) {
       alert(error);
     };

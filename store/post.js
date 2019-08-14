@@ -29,8 +29,22 @@ export const actions = {
   async downLoadMovieImage(ctx, file) {
     return await firebase.storage().ref().child(`images/${file.name}`).getDownloadURL();
   },
-  async getPostData(ctx,) {
-    return await db.collection("movies").orderBy('created').get();
+  async getAllPostData(ctx, {posts}) {
+    const postData = await db.collection("movies").orderBy('created').get();
+    console.log(postData);
+    postData.forEach(doc => {
+      console.log(doc);
+      const data = doc.data();
+      posts.unshift({
+        moiveId: doc.id,
+        userName: data.userName,
+        userImage: data.userImage,
+        title: data.title,
+        category: data.category,
+        image: data.image,
+        text: data.text,
+      });
+    });
   },
   async searchPostData(ctx, {searchType, searchData}) {
     return await db.collection("movies").where(searchType, '==', searchData).orderBy('created').get();

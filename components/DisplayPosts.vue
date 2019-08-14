@@ -94,7 +94,6 @@ export default {
         // タイトルが一致しなければ警告
         if(resultTitleData.docs.length === 0) {
           alert('一致するタイトルはありません');
-          this.movieTitle = '';
           return;
         }
         this.posts.length = 0;
@@ -110,6 +109,7 @@ export default {
             text: data.text,
           });
         });
+        this.category = '';
       } catch (error) {
         alert(error);
       };
@@ -130,7 +130,6 @@ export default {
         // カテゴリーが一致しなければ警告
         if(resultCategoryData.docs.length === 0) {
           alert('一致するカテゴリーはありません');
-          this.category = '';
           return;
         }
         this.posts.length = 0;
@@ -146,6 +145,7 @@ export default {
             text: data.text,
           });
         });
+        this.movieTitle = '';
       } catch (error) {
         alert(error);
       }
@@ -153,6 +153,8 @@ export default {
     async showAllPostData() {
       try {
         await this.$store.dispatch('post/getAllPostData', {posts: this.posts});
+        this.movieTitle = '';
+        this.category = '';
       } catch (error) {
         alert(error);
       };

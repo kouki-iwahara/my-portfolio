@@ -13,6 +13,35 @@
         </label>
       </div>
       <!-- search-title -->
+      <div class="movie-category">
+        <p>カテゴリーで検索</p>
+        <input name="category" type="radio" id="action" value="action" v-model="category">
+        <label for="action">アクション</label>
+        
+        <input name="category" type="radio" id="sf" value="sf" v-model="category">
+        <label for="sf">SF</label>
+
+        <input name="category" type="radio" id="comedy" value="comedy" v-model="category">
+        <label for="comedy">コメディ</label>
+
+        <input name="category" type="radio" id="suspense" value="suspense" v-model="category">
+        <label for="suspense">サスペンス</label>
+        <br>
+        <input name="category" type="radio" id="horror" value="horror" v-model="category">
+        <label for="horror">ホラー</label>
+
+        <input name="category" type="radio" id="romance" value="romance" v-model="category">
+        <label for="romance">恋愛</label>
+
+        <input name="category" type="radio" id="panic" value="panic" v-model="category">
+        <label for="panic">パニック</label>
+
+        <input name="category" type="radio" id="anime" value="anime" v-model="category">
+        <label for="anime">アニメ</label>
+
+        <input type="button" value="検索" @click="searchByCategory">
+      </div>
+      <!-- movie-category -->
     </fieldset>
     
     <div class="post" v-for="post in posts" :key="post.id"> 
@@ -40,7 +69,8 @@ export default {
   data() {
     return {
       posts: [],
-      movieTitle: ''
+      movieTitle: '',
+      category: ''
     }
   },
   methods: {
@@ -56,7 +86,10 @@ export default {
       };
       // 入力されたタイトルを投稿順に表示
       try {
-        const resultTitleData = await this.$store.dispatch('post/searchPostData', this.movieTitle);
+        const resultTitleData = await this.$store.dispatch('post/searchPostData',{
+          searchType: 'title',
+          searchData: this.movieTitle
+        });
         // タイトルが一致しなければ警告
         if(resultTitleData.docs.length === 0) {
           alert('一致するタイトルはありません');
@@ -79,6 +112,42 @@ export default {
       } catch (error) {
         alert(error);
       };
+    },
+    // カテゴリーで検索し対応するデータを表示
+    async searchByCategory() {
+      // 選択されていなければ警告表示
+      if(!this.category) {
+        alert('カテゴリーを選択してください');
+        return;
+      };
+      // 選択されたカテゴリーを投稿順に表示
+      try {
+        const resultCategoryData = await this.$store.dispatch('post/searchPostData',{
+          searchType: 'category',
+          searchData: this.category
+        });
+        // カテゴリーが一致しなければ警告
+        if(resultCategoryData.docs.length === 0) {
+          alert('一致するカテゴリーはありません');
+          this.category = '';
+          return;
+        }
+        this.posts.length = 0;
+        resultCategoryData.forEach(doc => {
+          const data = doc.data();
+          this.posts.unshift({
+            moiveId: doc.id,
+            userName: data.userName,
+            userImage: data.userImage,
+            title: data.title,
+            category: data.category,
+            image: data.image,
+            text: data.text,
+          });
+        });
+      } catch (error) {
+        alert(error);
+      }
     }
   },
   async created() {

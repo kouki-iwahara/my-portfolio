@@ -32,7 +32,7 @@ export const actions = {
   async getPostData(ctx,) {
     return await db.collection("movies").orderBy('created').get();
   },
-  async searchPostData(ctx, movieTitle) {
-    return await db.collection("movies").where('title', '==', movieTitle).orderBy('created').get();
+  async searchPostData(ctx, {searchType, searchData}) {
+    return await db.collection("movies").where(searchType, '==', searchData).orderBy('created').get();
   },
 }

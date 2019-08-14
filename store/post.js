@@ -29,4 +29,7 @@ export const actions = {
   async downLoadMovieImage(ctx, file) {
     return await firebase.storage().ref().child(`images/${file.name}`).getDownloadURL();
   },
+  async getPostData(ctx,) {
+    return await db.collection("movies").orderBy('created').get();
+  }
 }

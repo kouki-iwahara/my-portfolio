@@ -151,6 +151,7 @@ export default {
       }
     },
     async showAllPostData() {
+      this.posts.length = 0;
       try {
         await this.$store.dispatch('post/getAllPostData', {posts: this.posts});
         this.movieTitle = '';

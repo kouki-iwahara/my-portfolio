@@ -72,7 +72,8 @@ export default {
       posts: [],
       movieTitle: '',
       category: '',
-      resultCategoryData: ''
+      resultCategoryData: '',
+      allPostData: ''
     }
   },
   methods: {
@@ -140,7 +141,7 @@ export default {
       // 配列の中身を空にしないと検索する度に増えていく
       this.posts.length = 0;
       // 取得したデータを表示する
-      this.$store.dispatch('post/showSearchData',{
+      this.$store.dispatch('post/showData',{
         searchData: this.resultCategoryData,
         posts: this.posts
       });
@@ -160,10 +161,15 @@ export default {
   async created() {
     // サーバーからデータを取得して投稿順に表示する
     try {
-      this.$store.dispatch('post/getAllPostData', {posts: this.posts});
+      this.allPostData = await this.$store.dispatch('post/getAllPostData');
     } catch (error) {
       alert(error);
     };
+    console.log(this.allPostData);
+    this.$store.dispatch('post/showData',{
+      searchData: this.allPostData,
+      posts: this.posts
+    });
   }
 }
 </script>

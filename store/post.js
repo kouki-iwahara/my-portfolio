@@ -36,7 +36,7 @@ export const actions = {
       console.log(doc);
       const data = doc.data();
       posts.unshift({
-        moiveId: doc.id,
+        movieId: doc.id,
         userName: data.userName,
         userImage: data.userImage,
         title: data.title,
@@ -49,4 +49,18 @@ export const actions = {
   async searchPostData(ctx, {searchType, searchData}) {
     return await db.collection("movies").where(searchType, '==', searchData).orderBy('created').get();
   },
+  showSearchData(ctx, {searchData, posts}) {
+    searchData.forEach(doc => {
+      const data = doc.data();
+      posts.unshift({
+        moiveId: doc.id,
+        userName: data.userName,
+        userImage: data.userImage,
+        title: data.title,
+        category: data.category,
+        image: data.image,
+        text: data.text,
+      });
+    })
+  }
 }

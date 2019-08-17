@@ -71,7 +71,8 @@ export default {
     return {
       posts: [],
       movieTitle: '',
-      category: ''
+      category: '',
+      resultCategoryData: ''
     }
   },
   methods: {
@@ -123,32 +124,27 @@ export default {
       };
       // 選択されたカテゴリーを投稿順に表示
       try {
-        const resultCategoryData = await this.$store.dispatch('post/searchPostData',{
-          searchType: 'category',
-          searchData: this.category
-        });
-        // カテゴリーが一致しなければ警告
-        if(resultCategoryData.docs.length === 0) {
-          alert('一致するカテゴリーはありません');
-          return;
-        }
-        this.posts.length = 0;
-        resultCategoryData.forEach(doc => {
-          const data = doc.data();
-          this.posts.unshift({
-            moiveId: doc.id,
-            userName: data.userName,
-            userImage: data.userImage,
-            title: data.title,
-            category: data.category,
-            image: data.image,
-            text: data.text,
+        this.resultCategoryData = await this.$store.dispatch('post/searchPostData',{
+            searchType: 'category',
+            searchData: this.category
           });
-        });
-        this.movieTitle = '';
-      } catch (error) {
-        alert(error);
+        } catch (error) {
+          alert(error);
+        }
+      console.log(this.resultCategoryData)
+      // カテゴリーが一致しなければ警告
+      if(this.resultCategoryData.docs.length === 0) {
+        alert('一致するカテゴリーはありません');
+        return;
       }
+      // 配列の中身を空にしないと検索する度に増えていく
+      this.posts.length = 0;
+      // 取得したデータを表示する
+      this.$store.dispatch('post/showSearchData',{
+        searchData: this.resultCategoryData,
+        posts: this.posts
+      });
+      this.movieTitle = '';
     },
     async showAllPostData() {
       this.posts.length = 0;

@@ -92,6 +92,7 @@ export default {
       };
       // 入力されたタイトルを投稿順に表示
       try {
+        // タイトルと一致するデータを取得
         const resultTitleData = await this.$store.dispatch('post/searchPostData',{
           searchType: 'title',
           searchData: this.movieTitle
@@ -101,23 +102,13 @@ export default {
           alert('一致するタイトルはありません');
           return;
         }
-        this.posts.length = 0;
-        resultTitleData.forEach(doc => {
-          const data = doc.data();
-          this.posts.unshift({
-            moiveId: doc.id,
-            userName: data.userName,
-            userImage: data.userImage,
-            title: data.title,
-            category: data.category,
-            image: data.image,
-            text: data.text,
-          });
-        });
-        this.category = '';
+        // タイトルと一致するデータを表示する
+        await this.$store.dispatch('post/showData', {searchData: resultTitleData})
       } catch (error) {
         alert(error);
       };
+      // カテゴリーを初期値にして何を検索したかわかるようにした
+      this.category = '';
     },
     // カテゴリーで検索し対応するデータを表示
     async searchByCategory() {

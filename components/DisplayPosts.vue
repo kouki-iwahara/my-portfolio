@@ -71,6 +71,7 @@ export default {
     return {
       movieTitle: '',
       category: '',
+      resultTitleData: '',
       resultCategoryData: '',
     }
   },
@@ -90,23 +91,26 @@ export default {
         alert('タイトルを入力してください');
         return;
       };
-      // 入力されたタイトルを投稿順に表示
+      // タイトルと一致するデータを取得
       try {
-        // タイトルと一致するデータを取得
-        const resultTitleData = await this.$store.dispatch('post/searchPostData',{
+        this.resultTitleData = await this.$store.dispatch('post/searchPostData',{
           searchType: 'title',
           searchData: this.movieTitle
         });
-        // タイトルが一致しなければ警告
-        if(resultTitleData.docs.length === 0) {
-          alert('一致するタイトルはありません');
-          return;
-        }
-        // タイトルと一致するデータを表示する
-        await this.$store.dispatch('post/showData', {searchData: resultTitleData})
       } catch (error) {
         alert(error);
       };
+      // タイトルが一致しなければ警告
+      if(this.resultTitleData.docs.length === 0) {
+        alert('一致するタイトルはありません');
+        return;
+      }
+      // タイトルと一致するデータを表示する
+      try {
+        await this.$store.dispatch('post/showData', {searchedData: this.resultTitleData});
+      } catch (error) {
+        alert(error);
+      } 
       // カテゴリーを初期値にして何を検索したかわかるようにした
       this.category = '';
     },

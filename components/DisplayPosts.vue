@@ -151,14 +151,13 @@ export default {
       this.movieTitle = '';
     },
     async showAllPostData() {
-      this.posts.length = 0;
       try {
-        await this.$store.dispatch('post/getAllPostData', {posts: this.posts});
-        this.movieTitle = '';
-        this.category = '';
+        await this.$store.dispatch('post/getAllPostData');
       } catch (error) {
         alert(error);
       };
+      this.movieTitle = '';
+      this.category = '';
     }
   },
   created() {

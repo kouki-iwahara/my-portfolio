@@ -130,19 +130,18 @@ export default {
         } catch (error) {
           alert(error);
         }
-      console.log(this.resultCategoryData)
       // カテゴリーが一致しなければ警告
       if(this.resultCategoryData.docs.length === 0) {
         alert('一致するカテゴリーはありません');
         return;
       }
-      // 配列の中身を空にしないと検索する度に増えていく
-      this.posts.length = 0;
-      // 取得したデータを表示する
-      this.$store.dispatch('post/showData',{
-        searchData: this.resultCategoryData,
-        posts: this.posts
-      });
+      try {
+        // 取得したデータを表示する
+        this.$store.dispatch('post/showData',{searchedData: this.resultCategoryData});
+      } catch (error) {
+        alert(error);
+      };
+      // タイトル検索の値を初期値にして何を検索したかわかるようにした
       this.movieTitle = '';
     },
     async showAllPostData() {

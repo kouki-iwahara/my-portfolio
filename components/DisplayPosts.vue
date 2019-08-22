@@ -27,7 +27,7 @@
 
         <input name="category" type="radio" id="suspense" value="suspense" v-model="category">
         <label for="suspense">サスペンス</label>
-        <br>
+
         <input name="category" type="radio" id="horror" value="horror" v-model="category">
         <label for="horror">ホラー</label>
 

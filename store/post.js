@@ -1,6 +1,37 @@
 import firebase from '@/plugins/firebase'
 import {db} from '@/plugins/firebase'
 
+export const satae = () => ({
+  posts: []
+});
+
+export const mutations = {
+  // 投稿データを追加する
+  addPost(state,{
+    moiveId,
+    userName,
+    userImage,
+    title,
+    category,
+    movieImage,
+    text
+  }) {
+    state.posts.unshift({
+      moiveId,
+      userName,
+      userImage,
+      title,
+      category,
+      movieImage,
+      text,
+    })
+  },
+  delPost(state) {
+    // 配列を空にする
+    state.posts.length = 0;
+  }
+}
+
 export const actions = {
   // 記入されたデータをstorageに保存。
   async storageData(
@@ -16,7 +47,7 @@ export const actions = {
       userName: user.displayName,
       title: movieTitle,
       category: category,
-      image: movieImage,
+      movieImage: movieImage,
       text: memoryText,
       created: firebase.firestore.FieldValue.serverTimestamp() //日付順にソートする為
     });
@@ -29,24 +60,29 @@ export const actions = {
   async downLoadMovieImage(ctx, file) {
     return await firebase.storage().ref().child(`images/${file.name}`).getDownloadURL();
   },
-  async getAllPostData(ctx) {
-    return await db.collection("movies").orderBy('created').get();
+  // 全ての投稿データの取得
+  async getAllPostData({dispatch}) {
+    const allPostData = await db.collection("movies").orderBy('created').get();
+    await dispatch('showData', {searchData: allPostData})
   },
   async searchPostData(ctx, {searchType, searchData}) {
     return await db.collection("movies").where(searchType, '==', searchData).orderBy('created').get();
   },
-  showData(ctx, {searchData, posts}) {
+  // 投稿データをstateに保存する
+  async showData({commit}, {searchData}) {
+    // 一度配列を空にしないと前のデータに積み重なる
+    commit('delPost');
     searchData.forEach(doc => {
       const data = doc.data();
-      posts.unshift({
+      commit('addPost', {
         moiveId: doc.id,
         userName: data.userName,
         userImage: data.userImage,
         title: data.title,
         category: data.category,
-        image: data.image,
+        movieImage: data.movieImage,
         text: data.text,
-      });
+      })
     })
   }
 }

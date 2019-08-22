@@ -47,7 +47,7 @@
     
     <div class="post" v-for="post in posts" :key="post.id"> 
       <div class="post-img">
-        <img :src="post.image" alt="" width="300" height="200">
+        <img :src="post.movieImage" alt="" width="300" height="200">
       </div>
       <div class="post-title">
         <h3>{{ `Title: ${post.title}` }}</h3>
@@ -69,11 +69,14 @@
 export default {
   data() {
     return {
-      posts: [],
       movieTitle: '',
       category: '',
       resultCategoryData: '',
-      allPostData: ''
+    }
+  },
+  computed: {
+    posts() {
+      return this.$store.state.post.posts
     }
   },
   methods: {
@@ -158,18 +161,12 @@ export default {
       };
     }
   },
-  async created() {
-    // サーバーからデータを取得して投稿順に表示する
+  created() {
     try {
-      this.allPostData = await this.$store.dispatch('post/getAllPostData');
+      this.$store.dispatch('post/getAllPostData');
     } catch (error) {
       alert(error);
     };
-    console.log(this.allPostData);
-    this.$store.dispatch('post/showData',{
-      searchData: this.allPostData,
-      posts: this.posts
-    });
   }
 }
 </script>

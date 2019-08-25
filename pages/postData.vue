@@ -40,7 +40,7 @@
         <div class="movie-image">
           <p>画像</p>
           <input id="file" type="file" @change="getFileData">
-          <img class="preview" :src="movieImage" alt="">
+          <img class="preview" :src="this.movieImage" alt="">
         </div>
         <!-- /movie-image -->
         <div class="memory-text">
@@ -106,8 +106,9 @@ export default {
       // 必須項目が入力されているか確認
       if(!this.movieTitle || !this.category || !this.memoryText) {
         return;
-      }
-      // 画像を選択しているならアップロードし、ダウンロードURLを取得
+      };
+      // 画像を選択しているならアップロードし、ダウンロードURLを取得。
+      // 選択していないなら初期画像を設定
       if(this.selectedFile) {
         // 画像のアップロード
         try {
@@ -118,18 +119,21 @@ export default {
         }
         // 画像のダウンロードURL取得
         try {
-          this.movieImage = await this.$store.dispatch('post/downLoadMovieImage', this.selectedFile);
-          console.log(this.movieImage)
+          await this.$store.dispatch('post/downLoadMovieImage', this.selectedFile);
+          console.log(this.$store.state.post.movieImage)
         } catch (error) {
           alert(error);
         }
-      };
+      } else {
+        // 初期画像のURLを設定
+        this.$store.commit('post/getURL', this.movieImage)
+      }
       // サーバへ入力されたデータを保存。
       try {
         await this.$store.dispatch('post/storageData',
         {movieTitle: this.movieTitle,
         category: this.category,
-        movieImage: this.movieImage,
+        movieImage: this.$store.state.post.movieImage,
         memoryText: this.memoryText});
       } catch (error) {
         alert(error);

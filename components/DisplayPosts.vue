@@ -93,24 +93,13 @@ export default {
       };
       // タイトルと一致するデータを取得
       try {
-        this.resultTitleData = await this.$store.dispatch('post/searchPostData',{
+        await this.$store.dispatch('post/searchPostData',{
           searchType: 'title',
           searchData: this.movieTitle
         });
       } catch (error) {
         alert(error);
       };
-      // タイトルが一致しなければ警告
-      if(!this.resultTitleData.docs.length) {
-        alert('一致するタイトルはありません');
-        return;
-      }
-      // タイトルと一致するデータを表示する
-      try {
-        await this.$store.dispatch('post/addSearchedData', {searchedData: this.resultTitleData});
-      } catch (error) {
-        alert(error);
-      } 
       // カテゴリーを初期値にして何を検索したかわかるようにした
       this.category = '';
     },
@@ -123,24 +112,13 @@ export default {
       };
       // 選択されたカテゴリーを投稿順に表示
       try {
-        this.resultCategoryData = await this.$store.dispatch('post/searchPostData',{
+        await this.$store.dispatch('post/searchPostData',{
             searchType: 'category',
             searchData: this.category
           });
         } catch (error) {
           alert(error);
         }
-      // カテゴリーが一致しなければ警告
-      if(!this.resultCategoryData.docs.length) {
-        alert('一致するカテゴリーはありません');
-        return;
-      }
-      try {
-        // 取得したデータを表示する
-        this.$store.dispatch('post/addSearchedData',{searchedData: this.resultCategoryData});
-      } catch (error) {
-        alert(error);
-      };
       // タイトル検索の値を初期値にして何を検索したかわかるようにした
       this.movieTitle = '';
     },

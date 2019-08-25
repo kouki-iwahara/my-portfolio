@@ -49,8 +49,14 @@ export const actions = {
     const allPostData = await db.collection("movies").orderBy('created').get();
     await dispatch('addSearchedData', {searchedData: allPostData})
   },
-  async searchPostData(ctx, {searchType, searchData}) {
-    return await db.collection("movies").where(searchType, '==', searchData).orderBy('created').get();
+  // 検索した投稿を取得し表示
+  async searchPostData({dispatch}, {searchType, searchData}) {
+    const searchResults = await db.collection("movies").where(searchType, '==', searchData).orderBy('created').get();
+    if(!searchResults.docs.length) {
+      alert('一致する投稿はありません');
+      return;
+    };
+    await dispatch('addSearchedData', {searchedData: searchResults});
   },
   // 投稿データをstateに保存する
   async addSearchedData({commit}, {searchedData}) {

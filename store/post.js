@@ -47,26 +47,26 @@ export const actions = {
   // 全ての投稿データの取得
   async getAllPostData({dispatch}) {
     const allPostData = await db.collection("movies").orderBy('created').get();
-    await dispatch('showData', {searchedData: allPostData})
+    await dispatch('addSearchedData', {searchedData: allPostData})
   },
   async searchPostData(ctx, {searchType, searchData}) {
     return await db.collection("movies").where(searchType, '==', searchData).orderBy('created').get();
   },
   // 投稿データをstateに保存する
-  async showData({commit}, {searchedData}) {
+  async addSearchedData({commit}, {searchedData}) {
     // 一度配列を空にしないと前のデータに積み重なる
     commit('delPost');
     searchedData.forEach(doc => {
       const data = doc.data();
       commit('addPost', {
-        moiveId: doc.id,
+        movieId: doc.id,
         userName: data.userName,
         userImage: data.userImage,
         title: data.title,
         category: data.category,
         movieImage: data.movieImage,
         text: data.text,
-      })
-    })
+      });
+    });
   }
 }

@@ -107,7 +107,7 @@ export default {
       }
       // タイトルと一致するデータを表示する
       try {
-        await this.$store.dispatch('post/showData', {searchedData: this.resultTitleData});
+        await this.$store.dispatch('post/addSearchedData', {searchedData: this.resultTitleData});
       } catch (error) {
         alert(error);
       } 
@@ -137,7 +137,7 @@ export default {
       }
       try {
         // 取得したデータを表示する
-        this.$store.dispatch('post/showData',{searchedData: this.resultCategoryData});
+        this.$store.dispatch('post/addSearchedData',{searchedData: this.resultCategoryData});
       } catch (error) {
         alert(error);
       };

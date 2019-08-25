@@ -48,7 +48,8 @@ export const actions = {
   },
   // 検索した投稿を取得し表示
   async searchPostData({dispatch}, {searchType, searchData}) {
-    const searchResults = await db.collection("movies").where(searchType, '==', searchData).orderBy('created').get();
+    const searchResults = await db.collection("movies").where(`movieData.${searchType}`, '==', searchData).orderBy('created').get();
+    console.log(searchResults)
     if(!searchResults.docs.length) {
       alert('一致する投稿はありません');
       return;

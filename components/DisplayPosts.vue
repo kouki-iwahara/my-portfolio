@@ -98,7 +98,7 @@ export default {
           searchData: this.movieTitle
         });
       } catch (error) {
-        alert(error);
+        console.log(error);
       };
       // カテゴリーを初期値にして何を検索したかわかるようにした
       this.category = '';

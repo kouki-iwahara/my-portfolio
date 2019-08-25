@@ -101,7 +101,7 @@ export default {
         alert(error);
       };
       // タイトルが一致しなければ警告
-      if(this.resultTitleData.docs.length === 0) {
+      if(!this.resultTitleData.docs.length) {
         alert('一致するタイトルはありません');
         return;
       }
@@ -131,7 +131,7 @@ export default {
           alert(error);
         }
       // カテゴリーが一致しなければ警告
-      if(this.resultCategoryData.docs.length === 0) {
+      if(!this.resultCategoryData.docs.length) {
         alert('一致するカテゴリーはありません');
         return;
       }

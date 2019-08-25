@@ -22,22 +22,14 @@ export const mutations = {
 
 export const actions = {
   // 記入されたデータをstorageに保存。
-  async storageData(
-    { ctx },
-    {movieTitle,
-    category,
-    movieImage,
-    memoryText}) {
+  async storageData({ ctx }, movieData) {
     const user = firebase.auth().currentUser;
     await db.collection('movies').add({
       userId: user.uid, //自分の投稿履歴の検索用
       userImage: user.photoURL,
       userName: user.displayName,
-      title: movieTitle,
-      category: category,
-      movieImage: movieImage,
-      text: memoryText,
-      created: firebase.firestore.FieldValue.serverTimestamp() //日付順にソートする為
+      created: firebase.firestore.FieldValue.serverTimestamp(), //日付順にソートする為
+      movieData
     });
   },
   // 画像をアップロード
@@ -69,14 +61,15 @@ export const actions = {
     commit('delPost');
     searchedData.forEach(doc => {
       const data = doc.data();
+      console.log(data.movieData)
       commit('addPost', {
         movieId: doc.id,
         userName: data.userName,
         userImage: data.userImage,
-        title: data.title,
-        category: data.category,
-        movieImage: data.movieImage,
-        text: data.text,
+        title: data.movieData.title,
+        category: data.movieData.category,
+        movieImage: data.movieData.movieImage,
+        text: data.movieData.text,
       });
     });
   }

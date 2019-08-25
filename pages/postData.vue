@@ -131,10 +131,10 @@ export default {
       // サーバへ入力されたデータを保存。
       try {
         await this.$store.dispatch('post/storageData',
-        {movieTitle: this.movieTitle,
+        {title: this.movieTitle,
         category: this.category,
         movieImage: this.$store.state.post.movieImage,
-        memoryText: this.memoryText});
+        text: this.memoryText});
       } catch (error) {
         alert(error);
       }

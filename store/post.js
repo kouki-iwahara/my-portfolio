@@ -1,30 +1,14 @@
 import firebase from '@/plugins/firebase'
 import {db} from '@/plugins/firebase'
 
-export const satae = () => ({
+export const state = () => ({
   posts: []
 });
 
 export const mutations = {
   // 投稿データを追加する
-  addPost(state,{
-    moiveId,
-    userName,
-    userImage,
-    title,
-    category,
-    movieImage,
-    text
-  }) {
-    state.posts.unshift({
-      moiveId,
-      userName,
-      userImage,
-      title,
-      category,
-      movieImage,
-      text,
-    })
+  addPost(state, postData) {
+    state.posts.unshift(postData)
   },
   delPost(state) {
     // 配列を空にする

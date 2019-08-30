@@ -119,8 +119,7 @@ export default {
         }
         // 画像のダウンロードURL取得
         try {
-          await this.$store.dispatch('post/downLoadMovieImage', this.selectedFile);
-          console.log(this.$store.state.post.movieImage)
+          this.movieImage = await this.$store.dispatch('post/downLoadMovieImage', this.selectedFile);
         } catch (error) {
           alert(error);
         }
@@ -133,7 +132,7 @@ export default {
         await this.$store.dispatch('post/storageData',
         {title: this.movieTitle,
         category: this.category,
-        movieImage: this.$store.state.post.movieImage,
+        movieImage: this.movieImage,
         text: this.memoryText});
       } catch (error) {
         alert(error);

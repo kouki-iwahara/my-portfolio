@@ -3,7 +3,6 @@ import {db} from '@/plugins/firebase'
 
 export const state = () => ({
   posts: [],
-  movieImage: ''
 });
 
 export const mutations = {
@@ -14,9 +13,6 @@ export const mutations = {
   delPost(state) {
     // 配列を空にする
     state.posts.length = 0;
-  },
-  getURL(state, url) {
-    state.movieImage = url
   }
 }
 
@@ -38,8 +34,7 @@ export const actions = {
   },
   // 画像のダウンロードURLを取得
   async downLoadMovieImage({commit}, file) {
-    const url = await firebase.storage().ref().child(`images/${file.name}`).getDownloadURL();
-    commit('getURL', url);
+    return await firebase.storage().ref().child(`images/${file.name}`).getDownloadURL();
   },
   // 全ての投稿データの取得
   async getAllPostData({dispatch}) {
